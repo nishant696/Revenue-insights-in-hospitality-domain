@@ -30,9 +30,9 @@ Atliq Grands noticed a loss in their market share and revenue over a few months.
 | 11  | Total no show bookings       | To get the "No Show" bookings out of all Total bookings happened ("No show" means those customers who neither cancelled nor attended their booked rooms)     | `Total no show bookings = CALCULATE([Total Bookings], fact_bookings[booking_status] = "No Show")`                                                               | fact_bookings           |
 | 12  | No Show rate %               | Calculating the no show percentage.                                                                                                                        | `No Show rate % = DIVIDE([Total no show bookings], [Total Bookings])`                                                                                           | fact_bookings           |
 | 13  | Booking % by Platform        | To show the percentage contribution of each booking platform for bookings in hotels.                                                                        | `Booking % by Platform = DIVIDE([Total Bookings], CALCULATE([Total Bookings], ALL(fact_bookings[booking_platform])))*100`                                      | fact_bookings           |
-| 14  | Booking % by Room class      | To show the percentage contribution of each room class over total rooms booked.                                                                             | `Booking % by Room class = DIVIDE([Total Bookings], CALCULATE([Total Bookings], ALL(dim_rooms[room_class])))*100`                                               | fact_bookings, dim_rooms |
-| 15  | ADR                          | Calculate the ADR (Average Daily rate). It is the ratio of revenue to the total rooms booked/sold. It measures the average paid for rooms sold in a period. | `ADR = DIVIDE([Revenue], [Total Bookings], 0)`                                                                                                                 | fact_bookings           |
-| 16  | Realisation %                | Calculate the realization percentage. It is the successful "checked out" percentage over all bookings happened.                                            | `Realisation % = 1- ([Cancellation %] + [No Show rate %])`                                                                                                      | fact_bookings           |
+| 14  | Booking % by Room class      | To show the percentage contribution of each room class over the total rooms booked.                                                                             | `Booking % by Room class = DIVIDE([Total Bookings], CALCULATE([Total Bookings], ALL(dim_rooms[room_class])))*100`                                               | fact_bookings, dim_rooms |
+| 15  | ADR                          | Calculate the ADR (Average Daily rate). It is the ratio of revenue to the total rooms booked/sold. It measures the average paid-for rooms sold in a period. | `ADR = DIVIDE([Revenue], [Total Bookings], 0)`                                                                                                                 | fact_bookings           |
+| 16  | Realisation %                | Calculate the realization percentage. It is the successful "checked out" percentage of overall bookings that happened.                                            | `Realisation % = 1- ([Cancellation %] + [No Show rate %])`                                                                                                      | fact_bookings           |
 | 17  | RevPAR                       | Calculate the RevPAR (Revenue Per Available Room). RevPAR represents the revenue generated per available room, whether or not they are occupied.            | `RevPAR = DIVIDE([Revenue], [Total Capacity])`                                                                                                                 | fact_bookings, fact_agg_bookings |
 | 18  | DBRN                         | Calculate DBRN (Daily Booked Room Nights). This metric tells on average how many rooms are booked for a day considering a time period.                     | `DBRN = DIVIDE([Total Bookings], [No of days])`                                                                                                                | fact_bookings, dim_date |
 | 19  | DSRN                         | Calculate DSRN (Daily Sellable Room Nights). This metric tells on average how many rooms are ready to sell for a day considering a time period.             | `DSRN = DIVIDE([Total Capacity], [No of days])`                                                                                                                | fact_aggregated_bookings, dim_date |
@@ -60,7 +60,7 @@ This file contains all the meta information regarding the columns described in t
 
 1. **date**: This column represents the dates present in May, June, and July.
 2. **mmm yy**: This column represents the date in the format of mmm yy (monthname year).
-3. **week no**: This column represents the unique week number for that particular date.
+3. **Week no**: This column represents the unique week number for that particular date.
 4. **day_type**: This column represents whether the given day is Weekend or Weekday.
 
 ### Column Description for dim_hotels:
@@ -68,7 +68,7 @@ This file contains all the meta information regarding the columns described in t
 1. **property_id**: This column represents the Unique ID for each of the hotels.
 2. **property_name**: This column represents the name of each hotel.
 3. **category**: This column determines which class (Luxury, Business) a particular hotel/property belongs to.
-4. **city**: This column represents where the particular hotel/property resides in.
+4. **city**: This column represents where the particular hotel/property resides.
 
 ### Column Description for dim_rooms:
 
@@ -89,7 +89,7 @@ This file contains all the meta information regarding the columns described in t
 2. **property_id**: This column represents the Unique ID for each of the hotels.
 3. **booking_date**: This column represents the date on which the customer booked their rooms.
 4. **check_in_date**: This column represents the date on which the customer check-in (entered) at the hotel.
-5. **check_out_date**: This column represents the date on which the customer check-out (left) of the hotel.
+5. **check_out_date**: This column represents the date on which the customer checks out (left) of the hotel.
 6. **no_guests**: This column represents the number of guests who stayed in a particular room in that hotel.
 7. **room_category**: This column represents the type of room (RT1, RT2, RT3, RT4) in a hotel.
 8. **booking_platform**: This column represents in which way the customer booked his room.
@@ -103,7 +103,21 @@ This file contains all the meta information regarding the columns described in t
 This project contains several tooltips to provide additional context and insights for various data points and metrics in the dashboard.
 
 <img width="532" alt="revenue tooltip" src="https://github.com/nishant696/Revenue-insights-in-hospitality-domain/assets/73593128/16ebefe3-6851-452d-8fd0-4415c44b1bb6">
+This Tooltip shows Revenue generated by each category of rooms (Business and luxury) on weekends and weekdays 
 
+<img width="544" alt="revpar tooltip" src="https://github.com/nishant696/Revenue-insights-in-hospitality-domain/assets/73593128/cd827da4-6cbe-4207-bc6c-97f47c610e1d">
+This line graph shows the average revenue per week by day type (weekday vs weekend). It allows you to compare revenue trends between weekdays and weekends.
+
+<img width="484" alt="occupancy tooltip" src="https://github.com/nishant696/Revenue-insights-in-hospitality-domain/assets/73593128/2503bfc8-0f46-44c0-9851-8277cd20182e">
+This line graph shows the percentage of occupancy by week number and day type (weekday vs weekend). It allows you to compare occupancy trends between weekdays and weekends.
+
+<img width="475" alt="realization tooltip" src="https://github.com/nishant696/Revenue-insights-in-hospitality-domain/assets/73593128/91f9ce87-80b2-46eb-84a3-85471d1d811a">
+This line graph shows the percentage of realization by week number and day type (weekday vs weekend). It allows you to compare completion rates between weekdays and weekends.
+
+<img width="602" alt="dsrn tooltip" src="https://github.com/nishant696/Revenue-insights-in-hospitality-domain/assets/73593128/3070e6f0-5eef-4a69-ba88-66995aac0f5b">
+This line graph shows daily sellable rooms nights by week and how many rooms are ready to sell for a day considering a time period.
+
+<img width="418" alt="adr tooltip" src="https://github.com/nishant696/Revenue-insights-in-hospitality-domain/assets/73593128/593eb132-9333-41e8-acda-a86dc9469c21">
 
 ---
 
